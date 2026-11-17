@@ -8,6 +8,7 @@ parser = EndfParserPy()
 path_to_files = "neutronics_workflow\Code\workspace\JENDL\jendl5-n\jendl5-n"
 path_to_file = r"neutronics_workflow\Code\workspace\JENDL\jendl5-n\jendl5-n\n_011-Na-023.dat"
 path_to_decay_files = "neutronics_workflow\Code\workspace\JENDL\jendl5-dec_upd5\jendl5-dec_upd5"
+
 # All MT numbers from OpenMC REACTIONS dictionary
 list_of_mt_to_extract = [
     # Individual MT numbers
@@ -18,17 +19,17 @@ list_of_mt_to_extract = [
 ]
 def parse_filename(filename: str) -> Optional[Tuple[int, int, int]]:
         """
-        Parse JENDL filename to extract Z, A, and metastable state
+        Parse filename to extract Z, A, and metastable state
         
         Args:
-            filename: JENDL data filename (e.g., 'n_092-U-238.dat' or 'dec-092-U-238m1.dat')
+            filename: data filename (e.g., 'n_092-U-238.dat' or 'dec-092-U-238m1.dat')
             
         Returns:
             Tuple of (Z, A, metastable_state) or None if parsing fails 
         """
+
         # Pattern for neutron files: n_ZZZ-Symbol-AAA.dat or n_ZZZ-Symbol-AAAm?.dat
         neutron_pattern = r'n_(\d{3})-([A-Z][a-z]?)-(\d{3})(m\d+)?\.dat'
-        
         # Pattern for decay files: dec-ZZZ-Symbol-AAA.dat or dec-ZZZ-Symbol-AAAm?.dat  
         decay_pattern = r'dec-(\d{3})-([A-Z][a-z]?)-(\d{3})(m\d+)?\.dat'
         
@@ -40,14 +41,15 @@ def parse_filename(filename: str) -> Optional[Tuple[int, int, int]]:
                 a = int(match.group(3))
                 metastable = match.group(4)
                 
-                # Parse metastable state
-                m = 0
+                metastable = 0
                 if metastable:
                     m = int(metastable[1:])  # Extract number after 'm'
                 
                 return z, a, m
         
         return None
+
+
 def get_za_combinations_as_tuples(folder_path: str) -> List[Tuple[Tuple[int, int], Tuple[int, ...]]]:
     """
     Parse a folder of files and return a list of tuples where each tuple contains
